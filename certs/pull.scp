@@ -1,0 +1,36 @@
+#!/bin/bash
+echo SCP
+function work() {
+	command="ssh root@$1 \"docker pull 10.239.47.211:15000/arda/spark-netlib-worker:1.5.1-u14.04-0.11-SNAPSHOT\""
+
+        pw=1234qwer
+
+        expect -c "
+                set timeout 2000
+                spawn $command;
+                expect {
+                       \"password:\" {send \"$pw\r\"; exp_continue}
+                       \"(yes/no)?\" {send \"yes\r\"; exp_continue}
+                  }
+        "
+}
+
+ips=()
+for ((i=1;i<11;i++)); do
+        if [ $i -lt 10 ]; then num=0$i; else num=$i; fi
+        ip=gondolin-node-0$num
+        ips=( ${ips[@]} $ip )
+done
+for ((i=81;i<86;i++)); do
+        if [ $i -lt 10 ]; then num=0$i; else num=$i; fi
+        ip=gondolin-node-0$num
+        ips=( ${ips[@]} $ip )
+done
+ips=( ${ips[@]} 172.168.2.168 )
+ips=( ${ips[@]} 172.168.2.169 )
+
+
+
+export -f work
+parallel work ::: "${ips[@]}"
+#parallel work ::: "172.168.2.102"
