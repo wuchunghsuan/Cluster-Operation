@@ -18,14 +18,9 @@ function work() {
 ips=()
 for ((i=10;i<=15;i++)); do
         if [ $i -lt 10 ]; then num=0$i; else num=$i; fi
-        ip=gondolin-node-0$num
+        ip=node-0$num
         ips=( ${ips[@]} $ip )
 done
-ips=( ${ips[@]} 172.168.2.126 )
-ips=( ${ips[@]} 172.168.2.167 )
-
-
 
 export -f work
 parallel work ::: "${ips[@]}"
-#parallel work ::: "172.168.2.102"
