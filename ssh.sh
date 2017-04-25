@@ -2,7 +2,7 @@
 function work() {
 	command="ssh root@$1 \"echo 123\""
 
-        pw=1234qwer
+        pw=passwd
 
         expect -c "
                 set timeout 2000
@@ -20,7 +20,6 @@ for ((i=1;i<11;i++)); do
         ip=yourip-0$num
         ips=( ${ips[@]} $ip )
 done
-ips=( ${ips[@]} yourip )
 
 export -f work
 parallel work ::: "${ips[@]}"
