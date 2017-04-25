@@ -22,7 +22,6 @@ for ((i=1;i<11;i++)); do
         ip=yourip-0$num
         ips=( ${ips[@]} $ip )
 done
-ips=( ${ips[@]} yourip)
 
 export -f work
 parallel work ::: "${ips[@]}"
