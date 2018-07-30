@@ -5,7 +5,6 @@ MAP=$2
 REDUCE=$3
 CONFFILE="/root/HiBench/conf/hibench.conf"
 CONFFILE2="/root/HiBench/conf/workloads/micro/terasort.conf"
-REPORTDIR=$4
 
 conf(){
 	echo "-------------------------------------------------------------------"
@@ -21,40 +20,19 @@ conf(){
 	sed -i -e '22d' -e "21a hibench.workload.input                  \${hibench.hdfs.data.dir}/Terasort/Input-${SIZE}M-$MAP-$REDUCE"   $CONFFILE2
 	echo "hibench.default.map.parallelism         $MAP"
 	echo "hibench.default.shuffle.parallelism     $REDUCE"
-	echo "hibench.${NAME}.huge.datasize                  ${SIZE}0000000"
+	echo "hibench.${NAME}.huge.uservisits                  ${SIZE}0000000"
+	echo "hibench.workload.dir.name.input         Input-${SIZE}M-$MAP-$REDUCE"
+	echo "hibench.workload.input                  \${hibench.hdfs.data.dir}/Terasort/Input-${SIZE}M-$MAP-$REDUCE"
 }
 
-run(){
-	echo "-------------------------------------------------------------------"
-	echo "|                                                                 |"
-	echo "|                 RUN $NAME-${SIZE}G-$MAP-$REDUCE-$1                 "
-	echo "|                                                                 |"
-	echo "-------------------------------------------------------------------"
-	/root/HiBench/bin/workloads/micro/terasort/hadoop/run.sh
-	echo "Sleep 10s. Wait for report."
-	sleep 10
-}
-
-copy(){
+prepare(){
 	echo "-------------------------------------------------------------------"
         echo "|                                                                 |"
-        echo "|                 COPY $NAME-${SIZE}G-$MAP-$REDUCE-$1                 "
+        echo "|                 PREPARE $NAME-${SIZE}G-$MAP-$REDUCE              "
         echo "|                                                                 |"
         echo "-------------------------------------------------------------------"
-	echo "COPY"
-	echo " /root/HiBench/report/terasort/hadoop/"
-	echo "TO" 
-	echo "${REPORTDIR}/report-$NAME-${SIZE}G-$MAP-$REDUCE-$1/"
-	mkdir ${REPORTDIR}/report-$NAME-${SIZE}G-$MAP-$REDUCE-$1
-        cp -r /root/HiBench/report/terasort/hadoop/ ${REPORTDIR}/report-$NAME-${SIZE}G-$MAP-$REDUCE-$1/
+	/root/HiBench/bin/workloads/sql/aggregation/prepare/prepare.sh
 }
 
 conf
-
-int=1
-while(( $int<=1 ))
-do
-	run $int
-	copy $int
-	let "int++"
-done
+prepare

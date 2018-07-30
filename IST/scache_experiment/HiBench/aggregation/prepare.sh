@@ -5,7 +5,6 @@ MAP=$2
 REDUCE=$3
 CONFFILE="/root/HiBench/conf/hibench.conf"
 CONFFILE2="/root/HiBench/conf/workloads/sql/aggregation.conf"
-REPORTDIR=$4
 
 conf(){
 	echo "-------------------------------------------------------------------"
@@ -22,39 +21,18 @@ conf(){
 	echo "hibench.default.map.parallelism         $MAP"
 	echo "hibench.default.shuffle.parallelism     $REDUCE"
 	echo "hibench.${NAME}.huge.uservisits                  ${SIZE}000000"
+	echo "hibench.workload.dir.name.input         Input-${SIZE}M-$MAP-$REDUCE"
+	echo "hibench.workload.input                  \${hibench.hdfs.data.dir}/Aggregation/Input-${SIZE}M-$MAP-$REDUCE"
 }
 
-run(){
-	echo "-------------------------------------------------------------------"
-	echo "|                                                                 |"
-	echo "|                 RUN $NAME-${SIZE}M-$MAP-$REDUCE-$1                 "
-	echo "|                                                                 |"
-	echo "-------------------------------------------------------------------"
-	/root/HiBench/bin/workloads/sql/aggregation/hadoop/run.sh
-	echo "Sleep 10s. Wait for report."
-	sleep 10
-}
-
-copy(){
+prepare(){
 	echo "-------------------------------------------------------------------"
         echo "|                                                                 |"
-        echo "|                 COPY $NAME-${SIZE}M-$MAP-$REDUCE-$1                 "
+        echo "|                 PREPARE $NAME-${SIZE}M-$MAP-$REDUCE              "
         echo "|                                                                 |"
         echo "-------------------------------------------------------------------"
-	echo "COPY"
-	echo " /root/HiBench/report/aggregation/hadoop/"
-	echo "TO" 
-	echo "${REPORTDIR}/report-$NAME-${SIZE}M-$MAP-$REDUCE-$1/"
-	mkdir ${REPORTDIR}/report-$NAME-${SIZE}M-$MAP-$REDUCE-$1
-        cp -r /root/HiBench/report/aggregation/hadoop/ ${REPORTDIR}/report-$NAME-${SIZE}M-$MAP-$REDUCE-$1/
+	/root/HiBench/bin/workloads/sql/aggregation/prepare/prepare.sh
 }
 
 conf
-
-int=1
-while(( $int<=1 ))
-do
-	run $int
-	copy $int
-	let "int++"
-done
+prepare
