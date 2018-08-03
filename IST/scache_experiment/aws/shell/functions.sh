@@ -17,14 +17,6 @@ export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
 echo -e "-> [${YELLOW}LOAD FUNCTIONS${END}]"
 
 ### TOOL FUNCTIONS ###
-function tar_hadoop() {
-	echo -e " tar -xf ${BLUE}../tar/hadoop-2.7.5.tar ../bin/${END}"
-	tar -xf ../tar/hadoop-2.7.5.tar ../bin/
-}
-function tar_HiBench() {
-	echo -e " tar -xf ${BLUE}../tar/HiBench.tar ../bin/${END}"
-        tar -xf ../tar/HiBench.tar ../bin/
-}
 function scp_function() {
 	IP=$1
 	PORT=$2
@@ -35,6 +27,17 @@ function scp_function() {
 	CMD="scp -P $PORT $FROM $IP:$TO"
 	
 	expect_function "$CMD" $PASSWD
+}
+function scp_dir_function() {
+        IP=$1
+        PORT=$2
+        FROM=$3
+        TO=$4
+        PASSWD=$5
+        #echo -e " SCP IP:${GREEN}$IP${END} PORT:${GREEN}$PORT${END} FROM:${BLUE}$FROM${END} TO:${BLUE}$TO${END}"
+        CMD="scp -P $PORT -r $FROM $IP:$TO"
+
+        expect_function "$CMD" $PASSWD
 }
 function ssh_function() {
 	IP=$1
@@ -92,6 +95,34 @@ function scp_hadoop() {
 	parallel scp_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
 
 	echo -e "<- [${RED}SCP HADOOP${END}]"
+}
+function scp_origin_jar() {
+	tar -xf ../jar/origin.tar
+	FROM=./mapreduce
+        TO=/root/hadoop-2.7.5/share/hadoop/
+
+	echo -e "-> [${YELLOW}SCP ORIGIN JAR${END}]"
+
+	export -f scp_dir_function expect_function
+        parallel scp_dir_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
+
+	echo -e "-> [${YELLOW}SCP ORIGIN JAR${END}]"
+	
+	rm -rf mapreduce
+}
+function scp_scache_jar() {
+        tar -xf ../jar/scache.tar
+        FROM=./mapreduce
+        TO=/root/hadoop-2.7.5/share/hadoop/
+
+        echo -e "-> [${YELLOW}SCP SCACHE JAR${END}]"
+
+        export -f scp_dir_function expect_function
+        parallel scp_dir_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
+
+        echo -e "-> [${YELLOW}SCP SCACHE JAR${END}]"
+
+        rm -rf mapreduce
 }
 function tar_hadoop() {
 	CMD="tar -xf /root/hadoop-2.7.5.tar && rm hadoop-2.7.5.tar"
@@ -226,4 +257,4 @@ function conf_hadoop_slaves() {
 
 
 
-
+echo -e "<- [${RED}LOAD FUNCTIONS${END}]"

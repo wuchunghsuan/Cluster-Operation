@@ -103,15 +103,15 @@ conf_slaves_core_site() {
 #conf_slaves_yarn_site
 #conf_slaves_hdfs_site
 #conf_slaves_mapred_site
-#conf_slaves_core_site
+conf_slaves_core_site
 
 #install_java
 #stop_yarn
 #start_yarn
 #stop_yarn
 #stop_hdfs
-format_hdfs
-start_hdfs
+#format_hdfs
+#start_hdfs
 
 
 

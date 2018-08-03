@@ -17,7 +17,7 @@ conf(){
 	sed -i -e '8d' -e "7a hibench.default.shuffle.parallelism     $REDUCE" 			$CONFFILE
 	sed -i -e '61d' -e "60a hibench.workload.dir.name.input         Input-${SIZE}M-$MAP-$REDUCE" $CONFFILE
 	sed -i -e '5d' -e "4a hibench.${NAME}.huge.datasize                  ${SIZE}0000000" 	$CONFFILE2
-	sed -i -e '22d' -e "21a hibench.workload.input                  \${hibench.hdfs.data.dir}/Terasort/Input-${SIZE}M-$MAP-$REDUCE"   $CONFFILE2
+	sed -i -e '12d' -e "11a hibench.workload.input                  \${hibench.hdfs.data.dir}/Terasort/Input-${SIZE}M-$MAP-$REDUCE"   $CONFFILE2
 	echo "hibench.default.map.parallelism         $MAP"
 	echo "hibench.default.shuffle.parallelism     $REDUCE"
 	echo "hibench.${NAME}.huge.uservisits                  ${SIZE}0000000"
@@ -31,7 +31,7 @@ prepare(){
         echo "|                 PREPARE $NAME-${SIZE}G-$MAP-$REDUCE              "
         echo "|                                                                 |"
         echo "-------------------------------------------------------------------"
-	/root/HiBench/bin/workloads/sql/aggregation/prepare/prepare.sh
+	/root/HiBench/bin/workloads/micro/terasort/prepare/prepare.sh
 }
 
 conf

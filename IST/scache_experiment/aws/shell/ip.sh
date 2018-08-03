@@ -21,5 +21,5 @@ for ((i=0; i<length; i++))
 do
 	echo -e "${GREEN}	${IPS[$i]}${END}"
 done
-echo -e " PORT:${GREEN}       $PORT${END}"
-echo -e " MASTER:${GREEN}	$MASTER${END}"
+echo -e " PORT:${GREEN}$PORT${END}"
+echo -e " MASTER:${GREEN}$MASTER${END}"
