@@ -28,6 +28,15 @@ function scp_function() {
 	
 	expect_function "$CMD" $PASSWD
 }
+function scp_pem_function() {
+	IP=$1
+        PORT=$2
+        FROM=$3
+        TO=$4
+        PEM=$5
+
+	scp -i $PEM -P $PORT $FROM $IP:$TO
+}
 function scp_dir_function() {
         IP=$1
         PORT=$2
@@ -48,6 +57,14 @@ function ssh_function() {
 	CMD="ssh -p $PORT $IP \"${RUN}\""	
 	
 	expect_function "$CMD" $PASSWD
+}
+function ssh_pem_function() {
+	IP=$1
+        PORT=$2
+        RUN=$3
+        PEM=$4
+
+	ssh -i $PEM -p $PORT $IP "${RUN}"
 }
 function expect_function() {
 	CMD=$1
