@@ -6,7 +6,7 @@
 conf_master_yarn_site() {
 	FILE=yarn-site.xml
 	KEY=yarn.resourcemanager.scheduler.addres
-	VALUE=$MASTER:8130
+	VALUE=$MASTER:8030
 	conf_hadoop_master $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
@@ -55,17 +55,17 @@ conf_slaves_yarn_site() {
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.localizer.address
-	VALUE=":8140"
+	VALUE=":8040"
 	conf_hadoop_slaves_ip $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.webapp.address
-	VALUE=":8142"
+	VALUE=":8042"
 	conf_hadoop_slaves_ip $FILE $KEY $VALUE
 
 	FILE=yarn-site.xml
         KEY=yarn.resourcemanager.resource-tracker.address
-        VALUE="${MASTER}:8131"
+        VALUE="${MASTER}:8031"
         conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### hdfs-site.xml
