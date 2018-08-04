@@ -6,34 +6,39 @@
 conf_master_yarn_site() {
 	FILE=yarn-site.xml
 	KEY=yarn.resourcemanager.scheduler.addres
-	VALUE=192.168.2.11:8130
+	VALUE=$MASTER:8130
+	conf_hadoop_master $FILE $KEY $VALUE
+	
+	FILE=yarn-site.xml
+	KEY=yarn.resourcemanager.hostname
+	VALUE=$MASTER
 	conf_hadoop_master $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.resourcemanager.resource-tracker.address
-	VALUE=192.168.2.11:8131
+	VALUE=$MASTER:8031
 	conf_hadoop_master $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.resourcemanager.address
-	VALUE=192.168.2.11:8132
+	VALUE=$MASTER:8032
 	conf_hadoop_master $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.resourcemanager.admin.address
-	VALUE=192.168.2.11:8133
+	VALUE=$MASTER:8033
 	conf_hadoop_master $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.resourcemanager.webapp.address
-	VALUE=192.168.2.11:8088
+	VALUE=$MASTER:8088
 	conf_hadoop_master $FILE $KEY $VALUE
 }
 ### hdfs-site.xml
 conf_master_hdfs_site() {
 	FILE=hdfs-site.xml
 	KEY=dfs.namenode.http-address
-	VALUE=192.168.2.11:50070
+	VALUE=$MASTER:50070
 	conf_hadoop_master $FILE $KEY $VALUE
 	
 	FILE=hdfs-site.xml
