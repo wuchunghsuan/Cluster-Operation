@@ -65,7 +65,7 @@ conf_slaves_yarn_site() {
 
 	FILE=yarn-site.xml
         KEY=yarn.resourcemanager.resource-tracker.address
-        VALUE="${MASTER}:8031"
+        VALUE="${MASTER}:8331"
         conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### hdfs-site.xml
@@ -103,16 +103,16 @@ conf_slaves_core_site() {
 #scp_hadoop
 #tar_hadoop
 
-#conf_master_yarn_site
-#conf_master_hdfs_site
-#conf_slaves_yarn_site
-#conf_slaves_hdfs_site
-#conf_slaves_mapred_site
+conf_master_yarn_site
+conf_master_hdfs_site
+conf_slaves_yarn_site
+conf_slaves_hdfs_site
+conf_slaves_mapred_site
 conf_slaves_core_site
 
 #install_java
-#stop_yarn
-#start_yarn
+stop_yarn
+start_yarn
 #stop_yarn
 #stop_hdfs
 #format_hdfs
