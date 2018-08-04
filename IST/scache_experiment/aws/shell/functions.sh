@@ -12,7 +12,7 @@ HADOOP_DIR=/root/hadoop-2.7.5
 HADOOP_CONF_DIR=${HADOOP_DIR}/etc/hadoop
 
 export SHELL=/bin/bash
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 echo -e "-> [${YELLOW}LOAD FUNCTIONS${END}]"
 
