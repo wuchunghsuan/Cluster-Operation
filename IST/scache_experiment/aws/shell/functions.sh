@@ -64,7 +64,10 @@ function ssh_pem_function() {
         RUN=$3
         PEM=$4
 
-	ssh -i $PEM -p $PORT $IP "${RUN}"
+	#ssh -i $PEM -p $PORT $IP "${RUN}"
+	CMD="ssh -i $PEM -p $PORT $IP \"${RUN}\""
+	
+	expect_function "$CMD" $PASSWD
 }
 function expect_function() {
 	CMD=$1
