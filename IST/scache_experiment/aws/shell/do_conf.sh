@@ -67,6 +67,16 @@ conf_slaves_yarn_site() {
         KEY=yarn.resourcemanager.resource-tracker.address
         VALUE="${MASTER}:8331"
         conf_hadoop_slaves $FILE $KEY $VALUE
+	
+	FILE=yarn-site.xml
+	KEY=yarn.nodemanager.resource.cpu-vcores
+	VALUE="4"
+	conf_hadoop_slaves $FILE $KEY $VALUE
+	
+	FILE=yarn-site.xml
+	KEY=yarn.nodemanager.resource.memory-mb
+	VALUE="8192"
+	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### hdfs-site.xml
 conf_slaves_hdfs_site() {
@@ -110,9 +120,10 @@ conf_slaves_hdfs_site
 conf_slaves_mapred_site
 conf_slaves_core_site
 
-#install_java
-stop_yarn
-start_yarn
+install_java
+
+#stop_yarn
+#start_yarn
 #stop_yarn
 #stop_hdfs
 #format_hdfs
