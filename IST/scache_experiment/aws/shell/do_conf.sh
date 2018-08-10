@@ -110,8 +110,8 @@ conf_slaves_core_site() {
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 
-#scp_hadoop
-#tar_hadoop
+scp_hadoop
+tar_hadoop
 
 conf_master_yarn_site
 conf_master_hdfs_site
@@ -120,7 +120,7 @@ conf_slaves_hdfs_site
 conf_slaves_mapred_site
 conf_slaves_core_site
 
-install_java
+#install_java
 
 #stop_yarn
 #start_yarn

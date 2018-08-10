@@ -35,7 +35,7 @@ function scp_pem_function() {
         TO=$4
         PEM=$5
 
-	scp -i $PEM -P $PORT $FROM ubuntu@$IP:$TO
+	scp -i $PEM -P $PORT $FROM ec2-user@$IP:$TO
 }
 function scp_dir_function() {
         IP=$1
@@ -65,7 +65,7 @@ function ssh_pem_function() {
         PEM=$4
 
 	#ssh -i $PEM -p $PORT $IP "${RUN}"
-	CMD="ssh -i $PEM -p $PORT ubuntu@$IP \"${RUN}\""
+	CMD="ssh -i $PEM -p $PORT ec2-user@$IP \"${RUN}\""
 	
 	expect_function "$CMD" $PASSWD
 }
