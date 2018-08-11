@@ -78,6 +78,12 @@ conf_slaves_yarn_site() {
 	VALUE="8192"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
+test_slaves() {
+	FILE=test.test
+        KEY=test
+        VALUE="test"
+        conf_hadoop_slaves $FILE $KEY $VALUE
+}
 ### hdfs-site.xml
 conf_slaves_hdfs_site() {
 	FILE=hdfs-site.xml
@@ -110,18 +116,19 @@ conf_slaves_core_site() {
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 
-scp_hadoop
-tar_hadoop
-
-conf_master_yarn_site
-conf_master_hdfs_site
-conf_slaves_yarn_site
-conf_slaves_hdfs_site
-conf_slaves_mapred_site
-conf_slaves_core_site
+#scp_hadoop
+#tar_hadoop
+#
+#conf_master_yarn_site
+#conf_master_hdfs_site
+#conf_slaves_yarn_site
+#conf_slaves_hdfs_site
+#conf_slaves_mapred_site
+#conf_slaves_core_site
 
 #install_java
 
+#scp_origin_jar
 #stop_yarn
 #start_yarn
 #stop_yarn
@@ -129,6 +136,6 @@ conf_slaves_core_site
 #format_hdfs
 #start_hdfs
 
-
+test_slaves
 
 

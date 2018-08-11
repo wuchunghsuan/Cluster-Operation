@@ -1,4 +1,4 @@
-#!/bin/bash.sh  
+#!/bin/bash 
 
 ./prepare.sh 100 400  200
 ./prepare.sh 100 800  200
