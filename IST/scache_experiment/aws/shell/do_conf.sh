@@ -130,12 +130,12 @@ conf_slaves_core_site() {
 
 #scp_origin_jar
 #stop_yarn
-#start_yarn
+start_yarn
 #stop_yarn
 #stop_hdfs
 #format_hdfs
 #start_hdfs
 
-test_slaves
+#test_slaves
 
 

@@ -10,6 +10,7 @@ END="\033[0m"
 PASSWD=1234qwer
 HADOOP_DIR=/root/hadoop-2.7.5
 HADOOP_CONF_DIR=${HADOOP_DIR}/etc/hadoop
+HOME=/root/Cluster-Operation/IST/scache_experiment/aws
 
 export SHELL=/bin/bash
 export JAVA_HOME=/usr/lib/jvm/jre
@@ -117,7 +118,7 @@ function scp_hadoop() {
 	echo -e "<- [${RED}SCP HADOOP${END}]"
 }
 function scp_origin_jar() {
-	tar -xf ../jar/origin.tar
+	tar -xf ${HOME}/jar/origin.tar
 	FROM=./mapreduce
         TO=/root/hadoop-2.7.5/share/hadoop/
 
@@ -131,7 +132,7 @@ function scp_origin_jar() {
 	rm -rf mapreduce
 }
 function scp_scache_jar() {
-        tar -xf ../jar/scache.tar
+        tar -xf ${HOME}/jar/scache.tar
         FROM=./mapreduce
         TO=/root/hadoop-2.7.5/share/hadoop/
 
