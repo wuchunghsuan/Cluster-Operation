@@ -129,7 +129,7 @@ conf_slaves_core_site() {
 #install_java
 
 #scp_origin_jar
-#stop_yarn
+stop_yarn
 start_yarn
 #stop_yarn
 #stop_hdfs
