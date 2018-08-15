@@ -2,6 +2,7 @@
 . ./functions.sh
 
 ssh-keygen -t rsa
+cp -r /root/.ssh ../
 
 function ssh_copy_function() {
         IP=$1
