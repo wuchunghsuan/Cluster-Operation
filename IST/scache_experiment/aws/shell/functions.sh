@@ -117,6 +117,17 @@ function scp_hadoop() {
 
 	echo -e "<- [${RED}SCP HADOOP${END}]"
 }
+function scp_hosts() {
+	FROM=/etc/hosts
+	TO=/etc/hosts
+
+	echo -e "-> [${YELLOW}SCP HOSTS${END}]"
+
+	export -f scp_function expect_function
+	parallel scp_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
+
+	echo -e "<- [${RED}SCP HOSTS${END}]"
+}
 function scp_origin_jar() {
 	tar -xf ${HOME}/jar/origin.tar
 	FROM=./mapreduce
