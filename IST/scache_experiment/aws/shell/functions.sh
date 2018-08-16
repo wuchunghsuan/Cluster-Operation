@@ -291,7 +291,12 @@ function conf_hadoop_slaves() {
 
 	echo -e "<- [${RED}CONF HADOOP SLAVES ${1}${END}]"
 }
-
+function test_slaves() {
+	FILE=test.test
+        KEY=test
+        VALUE="test"
+        conf_hadoop_slaves $FILE $KEY $VALUE
+}
 
 
 
