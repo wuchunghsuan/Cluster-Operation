@@ -84,8 +84,8 @@ conf_slaves_yarn_site() {
 	conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
-	KEY=yarn.nodemanager.local-dirs
-	VALUE="\\\/ebs\\\/nodemanager\\\/local-dirs"
+	KEY=yarn.nodemanager.log-dirs
+	VALUE="\\\/ebs\\\/nodemanager\\\/log-dirs"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
