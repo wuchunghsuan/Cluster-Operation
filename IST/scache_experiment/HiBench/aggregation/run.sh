@@ -33,8 +33,8 @@ run(){
 	echo "|                                                                 |"
 	echo "-------------------------------------------------------------------"
 	/root/HiBench/bin/workloads/sql/aggregation/hadoop/run.sh
-	echo "Sleep 60s. Wait for report."
-	sleep 60
+	echo "Sleep 100s. Wait for report."
+	sleep 100
 }
 
 copy(){
