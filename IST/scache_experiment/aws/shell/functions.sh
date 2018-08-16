@@ -166,6 +166,16 @@ function tar_hadoop() {
 
 	echo -e "<- [${RED}TAR HADOOP${END}]"
 }
+function mount_disk() {
+	CMD="mkfs -t ext4 /dev/xvdba && mkdir /ebs && mount /dev/xvdba /ebs"
+
+	echo -e "-> [${YELLOW}MOUNT DISK${END}]"
+	
+	export -f ssh_function expect_function
+	parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
+
+	echo -e "<- [${RED}MOUNT DISK${END}]"
+}
 function install_java() {
 	CMD="apt-get update && apt-get install -y default-jre"
 
