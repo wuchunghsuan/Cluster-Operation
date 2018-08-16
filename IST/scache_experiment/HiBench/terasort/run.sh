@@ -33,8 +33,8 @@ run(){
 	echo "|                                                                 |"
 	echo "-------------------------------------------------------------------"
 	/root/HiBench/bin/workloads/micro/terasort/hadoop/run.sh
-	echo "Sleep 30s. Wait for report."
-	sleep 30
+	echo "Sleep 100s. Wait for report."
+	sleep 100
 }
 
 copy(){
