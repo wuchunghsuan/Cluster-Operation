@@ -114,6 +114,8 @@ function init() {
 	scp_hadoop
 	tar_hadoop
 	
+	mount_disk
+	
 	conf_master_yarn_site
 	conf_master_hdfs_site
 	conf_slaves_yarn_site
