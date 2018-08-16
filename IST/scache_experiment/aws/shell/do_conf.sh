@@ -77,6 +77,21 @@ conf_slaves_yarn_site() {
 	KEY=yarn.nodemanager.resource.memory-mb
 	VALUE="32768"
 	conf_hadoop_slaves $FILE $KEY $VALUE
+	
+	FILE=yarn-site.xml
+	KEY=yarn.nodemanager.local-dirs
+	VALUE=/ebs/nodemanager/local-dirs
+	conf_hadoop_slaves $FILE $KEY $VALUE
+	
+	FILE=yarn-site.xml
+	KEY=yarn.nodemanager.local-dirs
+	VALUE=/ebs/nodemanager/local-dirs
+	conf_hadoop_slaves $FILE $KEY $VALUE
+	
+	FILE=yarn-site.xml
+	KEY=yarn.nodemanager.remote-app-log-dir
+	VALUE=/ebs/nodemanager/remote-app-log-dir
+	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### hdfs-site.xml
 conf_slaves_hdfs_site() {
