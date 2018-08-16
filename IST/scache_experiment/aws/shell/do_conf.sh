@@ -43,7 +43,7 @@ conf_master_hdfs_site() {
 	
 	FILE=hdfs-site.xml
         KEY=dfs.namenode.name.dir
-        VALUE="\/root\/dir\/hadoop\/namenode"
+        VALUE="\/ebs\/dir\/hadoop\/namenode"
         conf_hadoop_master $FILE $KEY $VALUE	
 }
 ## CONF SLAVES
@@ -70,25 +70,19 @@ conf_slaves_yarn_site() {
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.resource.cpu-vcores
-	VALUE="4"
+	VALUE="16"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.resource.memory-mb
-	VALUE="8192"
+	VALUE="32768"
 	conf_hadoop_slaves $FILE $KEY $VALUE
-}
-test_slaves() {
-	FILE=test.test
-        KEY=test
-        VALUE="test"
-        conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### hdfs-site.xml
 conf_slaves_hdfs_site() {
 	FILE=hdfs-site.xml
 	KEY=dfs.datanode.data.dir
-	VALUE="\\\/root\\\/dir\\\/hadoop\\\/datanode"
+	VALUE="\\\/ebs\\\/dir\\\/hadoop\\\/datanode"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### mapred-site.xml
@@ -100,12 +94,12 @@ conf_slaves_mapred_site() {
 	
 	FILE=mapred-site.xml
 	KEY=mapreduce.cluster.local.dir
-	VALUE="\\\/root\\\/dir\\\/hadoop\\\//tmp\\\/mapred\\\/local"
+	VALUE="\\\/ebs\\\/dir\\\/hadoop\\\//tmp\\\/mapred\\\/local"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=mapred-site.xml
 	KEY=
-	VALUE="\\\/root\\\/dir\\\/hadoop\\\/datanode"
+	VALUE="\\\/ebs\\\/dir\\\/hadoop\\\/datanode"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### core-site.xml
@@ -116,21 +110,29 @@ conf_slaves_core_site() {
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 
-#scp_hadoop
-#tar_hadoop
-#
-#conf_master_yarn_site
-#conf_master_hdfs_site
-#conf_slaves_yarn_site
-#conf_slaves_hdfs_site
-#conf_slaves_mapred_site
-#conf_slaves_core_site
+function init() {
+	scp_hadoop
+	tar_hadoop
+	
+	conf_master_yarn_site
+	conf_master_hdfs_site
+	conf_slaves_yarn_site
+	conf_slaves_hdfs_site
+	conf_slaves_mapred_site
+	conf_slaves_core_site
+	
+	start_yarn
+	format_hdfs
+	start_hdfs
+}
+
+init
 
 #install_java
 
 #scp_origin_jar
-stop_yarn
-start_yarn
+#stop_yarn
+#start_yarn
 #stop_yarn
 #stop_hdfs
 #format_hdfs
