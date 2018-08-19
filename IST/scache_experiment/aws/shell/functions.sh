@@ -167,7 +167,17 @@ function tar_hadoop() {
 	echo -e "<- [${RED}TAR HADOOP${END}]"
 }
 function mount_disk() {
-	CMD="mkfs -t ext4 /dev/xvdba && mkdir /ebs && mount /dev/xvdba /ebs"
+	CMD="mkfs -t ext4 /dev/xvdba && mkdir /ebs ; mount /dev/xvdba /ebs"
+
+	echo -e "-> [${YELLOW}MOUNT DISK${END}]"
+	
+	export -f ssh_function expect_function
+	parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
+
+	echo -e "<- [${RED}MOUNT DISK${END}]"
+}
+function mount_disk2() {
+	CMD="mkfs -t ext4 /dev/xvdbb && mkdir /ebs2 ; mount /dev/xvdba /ebs2"
 
 	echo -e "-> [${YELLOW}MOUNT DISK${END}]"
 	
