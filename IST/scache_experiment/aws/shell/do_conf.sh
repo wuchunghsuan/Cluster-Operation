@@ -43,7 +43,7 @@ conf_master_hdfs_site() {
 	
 	FILE=hdfs-site.xml
         KEY=dfs.namenode.name.dir
-        VALUE="\/ebs\/dir\/hadoop\/namenode"
+        VALUE="\/ebs2\/dir\/hadoop\/namenode"
         conf_hadoop_master $FILE $KEY $VALUE	
 }
 ## CONF SLAVES
@@ -97,7 +97,7 @@ conf_slaves_yarn_site() {
 conf_slaves_hdfs_site() {
 	FILE=hdfs-site.xml
 	KEY=dfs.datanode.data.dir
-	VALUE="\\\/ebs\\\/dir\\\/hadoop\\\/datanode"
+	VALUE="\\\/ebs2\\\/dir\\\/hadoop\\\/datanode"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### mapred-site.xml
@@ -110,11 +110,6 @@ conf_slaves_mapred_site() {
 	FILE=mapred-site.xml
 	KEY=mapreduce.cluster.local.dir
 	VALUE="\\\/ebs\\\/dir\\\/hadoop\\\//tmp\\\/mapred\\\/local"
-	conf_hadoop_slaves $FILE $KEY $VALUE
-	
-	FILE=mapred-site.xml
-	KEY=
-	VALUE="\\\/ebs\\\/dir\\\/hadoop\\\/datanode"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### core-site.xml
