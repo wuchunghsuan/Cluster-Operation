@@ -13,6 +13,14 @@ function pre_run() {
 	./conf_slowstart.sh $ST
 	./run.sh $SIZE $MAP $REDUCE "no-report" $JAR
 }
+function pre() {
+	ST=$1
+	SIZE=$2
+	MAP=$3
+	REDUCE=$4
+	JAR=$5
+	./prepare.sh $SIZE $MAP $REDUCE  
+}
 function run() {
         ST=$1
         SIZE=$2
@@ -23,18 +31,20 @@ function run() {
         ./run.sh $SIZE $MAP $REDUCE "no-report" $JAR
 }
 
-#scp_origin_jar
-#stop_yarn
-#start_yarn
+scp_origin_jar
+stop_yarn
+start_yarn
 
-#pre_run 1 1600 400 400 "origin"
+pre 1 64 256 58 "origin"
 
-#scp_scache_jar
-#stop_yarn
-#start_yarn
+run 1 64 256 58 "origin"
 
-#run 0.6 1600 400 400 "scache"
-#
+scp_scache_jar
+stop_yarn
+start_yarn
+
+run 0.6 64 256 58 "scache"
+
 #scp_origin_jar
 #stop_yarn
 #start_yarn
@@ -55,11 +65,5 @@ function run() {
 #stop_yarn
 #start_yarn
 #
-pre_run 0.6 100 400 200 "scache"
-pre_run 0.8 100 800 200 "scache"
-pre_run 0.9 100 1600 200 "scache"
 
-pre_run 0.6 200 400 200 "scache"
-pre_run 0.8 200 800 200 "scache"
-pre_run 0.9 200 1600 200 "scache"
 
