@@ -186,6 +186,16 @@ function mount_disk2() {
 
 	echo -e "<- [${RED}MOUNT DISK${END}]"
 }
+function do_wondershaper() {
+        CMD="yum install -y git ; git clone https://github.com/magnific0/wondershaper.git ; cd wondershaper ; ./wondershaper -a eth0 -d 940000 -u 940000"
+
+        echo -e "-> [${YELLOW}MOUNT DISK${END}]"
+
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
+
+        echo -e "<- [${RED}MOUNT DISK${END}]"
+}
 function install_java() {
 	CMD="apt-get update && apt-get install -y default-jre"
 
