@@ -125,6 +125,7 @@ function init() {
 	tar_hadoop
 	
 	mount_disk
+	mount_disk2
 	
 	conf_master_yarn_site
 	conf_master_hdfs_site

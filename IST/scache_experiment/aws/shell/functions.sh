@@ -177,7 +177,7 @@ function mount_disk() {
 	echo -e "<- [${RED}MOUNT DISK${END}]"
 }
 function mount_disk2() {
-	CMD="mkfs -t ext4 /dev/xvdbb && mkdir /ebs2 ; mount /dev/xvdba /ebs2"
+	CMD="mkfs -t ext4 /dev/xvdbb && mkdir /ebs2 ; mount /dev/xvdbb /ebs2"
 
 	echo -e "-> [${YELLOW}MOUNT DISK${END}]"
 	
