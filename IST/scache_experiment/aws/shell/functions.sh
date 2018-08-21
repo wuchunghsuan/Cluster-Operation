@@ -206,6 +206,16 @@ function run_wondershaper() {
 
         echo -e "<- [${RED}RUN WONDERSHAPER${END}]"
 }
+function remove_wondershaper() {
+        CMD="/root/wondershaper/wondershaper -c -a eth0"
+
+        echo -e "-> [${YELLOW}REMOVE WONDERSHAPER${END}]"
+
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
+
+        echo -e "<- [${RED}REMOVE WONDERSHAPER${END}]"
+}
 function install_java() {
 	CMD="apt-get update && apt-get install -y default-jre"
 
