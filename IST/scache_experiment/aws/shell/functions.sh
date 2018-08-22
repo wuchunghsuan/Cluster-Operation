@@ -197,7 +197,7 @@ function install_wondershaper() {
         echo -e "<- [${RED}INSTALL WONDERSHAPER${END}]"
 }
 function run_wondershaper() {
-        CMD="/root/wondershaper/wondershaper -a eth0 -d 940000 -u 940000"
+        CMD="/root/wondershaper/wondershaper -a eth0 -d 300000 -u 300000"
 
         echo -e "-> [${YELLOW}RUN WONDERSHAPER${END}]"
 
