@@ -70,12 +70,12 @@ conf_slaves_yarn_site() {
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.resource.cpu-vcores
-	VALUE="16"
+	VALUE="4"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.resource.memory-mb
-	VALUE="32768"
+	VALUE="8192"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
