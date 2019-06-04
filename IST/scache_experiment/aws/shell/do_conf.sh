@@ -51,21 +51,51 @@ conf_master_hdfs_site() {
 conf_slaves_yarn_site() {
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.hostname
-	conf_hadoop_slaves_ip $FILE $KEY ""
+	#conf_hadoop_slaves_ip $FILE $KEY ""
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.localizer.address
 	VALUE=":8040"
-	conf_hadoop_slaves_ip $FILE $KEY $VALUE
+	#conf_hadoop_slaves_ip $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.webapp.address
 	VALUE=":8042"
-	conf_hadoop_slaves_ip $FILE $KEY $VALUE
+	#conf_hadoop_slaves_ip $FILE $KEY $VALUE
+
+	FILE=yarn-site.xml
+        KEY=yarn.resourcemanager.scheduler.addres
+        VALUE=$MASTER:8030
+        conf_hadoop_slaves $FILE $KEY $VALUE
+
+        FILE=yarn-site.xml
+        KEY=yarn.resourcemanager.hostname
+        VALUE=$MASTER
+        conf_hadoop_slaves $FILE $KEY $VALUE
+
+        FILE=yarn-site.xml
+        KEY=yarn.resourcemanager.resource-tracker.address
+        VALUE=$MASTER:8031
+        conf_hadoop_slaves $FILE $KEY $VALUE
+
+        FILE=yarn-site.xml
+        KEY=yarn.resourcemanager.address
+        VALUE=$MASTER:8032
+        conf_hadoop_slaves $FILE $KEY $VALUE
+
+        FILE=yarn-site.xml
+        KEY=yarn.resourcemanager.admin.address
+        VALUE=$MASTER:8033
+        conf_hadoop_slaves $FILE $KEY $VALUE
+
+        FILE=yarn-site.xml
+        KEY=yarn.resourcemanager.webapp.address
+        VALUE=$MASTER:8088
+        conf_hadoop_slaves $FILE $KEY $VALUE
 
 	FILE=yarn-site.xml
         KEY=yarn.resourcemanager.resource-tracker.address
-        VALUE="${MASTER}:8331"
+        VALUE="${MASTER}:8031"
         conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
@@ -80,24 +110,24 @@ conf_slaves_yarn_site() {
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.local-dirs
-	VALUE="\\\/ebs\\\/nodemanager\\\/local-dirs"
+	VALUE="\\\/log\\\/nodemanager\\\/local-dirs"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.log-dirs
-	VALUE="\\\/ebs\\\/nodemanager\\\/log-dirs"
+	VALUE="\\\/log\\\/nodemanager\\\/log"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.remote-app-log-dir
-	VALUE="\\\/ebs\\\/nodemanager\\\/remote-app-log-dir"
+	VALUE="\\\/log\\\/nodemanager\\\/remote-app-log-dir"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### hdfs-site.xml
 conf_slaves_hdfs_site() {
 	FILE=hdfs-site.xml
 	KEY=dfs.datanode.data.dir
-	VALUE="\\\/ebs\\\/dir\\\/hadoop\\\/datanode"
+	VALUE="\\\/dir\\\/hadoop\\\/datanode"
 	conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### mapred-site.xml
@@ -124,24 +154,26 @@ function init() {
 	scp_hadoop
 	tar_hadoop
 	
-	mount_disk
-	
-	install_wondershaper
-	run_wondershaper
-	
-	conf_master_yarn_site
-	conf_master_hdfs_site
+	#mount_disk
+	#
+	#install_wondershaper
+	#run_wondershaper
+	#
+	#conf_master_yarn_site
+	#conf_master_hdfs_site
 	conf_slaves_yarn_site
 	conf_slaves_hdfs_site
-	conf_slaves_mapred_site
+	#conf_slaves_mapred_site
 	conf_slaves_core_site
-	
-	start_yarn
-	format_hdfs
-	start_hdfs
+	#
+	#start_yarn
+	#format_hdfs
+	#start_hdfs
 }
 
-init
+#init
+#conf_slaves_hdfs_site
+scp_hosts
 
 #install_java
 
@@ -153,6 +185,8 @@ init
 #format_hdfs
 #start_hdfs
 
+
+
 #test_slaves
 
-
+#conf_slaves_yarn_site

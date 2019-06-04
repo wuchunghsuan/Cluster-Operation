@@ -8,12 +8,12 @@ BLUE="\033[34m"
 END="\033[0m"
 
 PASSWD=1234qwer
-HADOOP_DIR=/root/hadoop-2.7.5
+HADOOP_DIR=/root/hadoop-2.8.5
 HADOOP_CONF_DIR=${HADOOP_DIR}/etc/hadoop
 HOME=/root/Cluster-Operation/IST/scache_experiment/aws
 
 export SHELL=/bin/bash
-export JAVA_HOME=/usr/lib/jvm/jre
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk/
 
 echo -e "-> [${YELLOW}LOAD FUNCTIONS${END}]"
 
@@ -107,7 +107,7 @@ function conf_hadoop_function() {
 
 ### APP FUNCTIONS ###
 function scp_hadoop() {
-	FROM=../tar/hadoop-2.7.5.tar
+	FROM=../tar/hadoop-2.8.5.tar
 	TO=/root/
 
 	echo -e "-> [${YELLOW}SCP HADOOP${END}]"
@@ -116,6 +116,17 @@ function scp_hadoop() {
 	parallel scp_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
 
 	echo -e "<- [${RED}SCP HADOOP${END}]"
+}
+function scp_ops() {
+        FROM=../tar/ops.tar
+        TO=/root/
+
+        echo -e "-> [${YELLOW}SCP OPS${END}]"
+
+        export -f scp_function expect_function
+        parallel scp_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
+
+        echo -e "<- [${RED}SCP OPS${END}]"
 }
 function scp_hosts() {
 	FROM=/etc/hosts
@@ -128,10 +139,41 @@ function scp_hosts() {
 
 	echo -e "<- [${RED}SCP HOSTS${END}]"
 }
+function scp_etcd() {
+        FROM=./etcd.sh
+        TO=/root/
+
+        echo -e "-> [${YELLOW}SCP ETCD${END}]"
+	ip=()
+	for i in 0 1 2 3 4 5 6 7; do
+		echo ${IPS[$i]}
+		ip=(${ip[@]} ${IPS[$i]})
+	done
+	echo ${ip[@]}
+        export -f scp_function expect_function
+        parallel scp_function ::: ${ip[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
+
+        echo -e "<- [${RED}SCP ETCD${END}]"
+}
+function start_etcd() {
+	echo -e "-> [${YELLOW}START ETCD${END}]"
+        ip=()
+        for i in 0 1 2 3 4 5 6 7; do
+                echo ${IPS[$i]}
+                ip=(${ip[@]} ${IPS[$i]})
+        done
+        echo ${ip[@]}
+
+	CMD1="/root/etcd.sh "
+	export -f ssh_function expect_function
+        parallel ssh_function ::: "${ip[@]}" ::: $PORT ::: "$CMD1" ::: $PASSWD
+
+	echo -e "<- [${RED}STOP ETCD${END}]"
+}
 function scp_origin_jar() {
 	tar -xf ${HOME}/jar/origin.tar
 	FROM=./mapreduce
-        TO=/root/hadoop-2.7.5/share/hadoop/
+        TO=/root/hadoop-2.8.5/share/hadoop/
 
 	echo -e "-> [${YELLOW}SCP ORIGIN JAR${END}]"
 
@@ -142,22 +184,32 @@ function scp_origin_jar() {
 	
 	rm -rf mapreduce
 }
-function scp_scache_jar() {
-        tar -xf ${HOME}/jar/scache.tar
+function scp_ops_jar() {
+        tar -xf ${HOME}/jar/ops_jar.tar
         FROM=./mapreduce
-        TO=/root/hadoop-2.7.5/share/hadoop/
+        TO=/root/hadoop-2.8.5/share/hadoop/
 
-        echo -e "-> [${YELLOW}SCP SCACHE JAR${END}]"
+        echo -e "-> [${YELLOW}SCP OPS JAR${END}]"
 
         export -f scp_dir_function expect_function
         parallel scp_dir_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
 
-        echo -e "-> [${YELLOW}SCP SCACHE JAR${END}]"
+        echo -e "-> [${YELLOW}SCP OPS JAR${END}]"
 
         rm -rf mapreduce
 }
+function tar_ops() {
+        CMD="tar -xf /root/ops.tar && rm ops.tar"
+
+        echo -e "-> [${YELLOW}TAR OPS${END}]"
+
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
+
+        echo -e "<- [${RED}TAR OPS${END}]"
+}
 function tar_hadoop() {
-	CMD="tar -xf /root/hadoop-2.7.5.tar && rm hadoop-2.7.5.tar"
+	CMD="tar -xf /root/hadoop-2.8.5.tar && rm hadoop-2.8.5.tar"
 
 	echo -e "-> [${YELLOW}TAR HADOOP${END}]"
 	
@@ -216,8 +268,20 @@ function remove_wondershaper() {
 
         echo -e "<- [${RED}REMOVE WONDERSHAPER${END}]"
 }
+function install_docker() {
+#	CMD="yum update -y && yum install -y docker && systemctl start docker"
+	#CMD="amazon-linux-extras install docker -y"
+	CMD="systemctl start docker && docker pull quay.io/coreos/etcd:latest"
+
+        echo -e "-> [${YELLOW}INSTALL DOCKER${END}]"
+
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
+
+        echo -e "<- [${RED}INSTALL DOCKER${END}]"
+}
 function install_java() {
-	CMD="apt-get update && apt-get install -y default-jre"
+	CMD="yum update -y && yum install -y java-1.8.0-openjdk-devel.x86_64"
 
 	echo -e "-> [${YELLOW}INSTALL JAVA${END}]"
 
@@ -226,60 +290,110 @@ function install_java() {
 
 	echo -e "<- [${RED}INSTALL JAVA${END}]"
 }
+function clean_hdfs() {
+        CMD1="rm -rf /dir/hadoop/datanode/current/"
+
+        echo -e "-> [${YELLOW}CLEAN HADOOP${END}]"
+
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD1" ::: $PASSWD
+
+        echo -e "<- [${RED}CLEAN HADOOP${END}]"
+}
+function clean_hadoop() {
+        CMD1="rm -rf ${HADOOP_DIR}"
+
+        echo -e "-> [${YELLOW}CLEAN HADOOP${END}]"
+
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD1" ::: $PASSWD
+
+        echo -e "<- [${RED}CLEAN HADOOP${END}]"
+}
+function start_ops() {
+        CMD1="export JAVA_HOME=${JAVA_HOME} && cd /root/OPS/scripts && ./start-master.sh"
+	CMD2="export JAVA_HOME=${JAVA_HOME} && cd /root/OPS/scripts && ./start-worker.sh"
+
+        echo -e "-> [${YELLOW}START OPS${END}]"
+
+        #$CMD1
+        ssh_function $MASTER $PORT "$CMD1" $PASSWD
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD2" ::: $PASSWD
+
+        echo -e "<- [${RED}START OPS${END}]"
+}
+function stop_ops() {
+        CMD1="export JAVA_HOME=${JAVA_HOME} && cd /root/OPS/scripts && ./stop.sh"
+        CMD2="export JAVA_HOME=${JAVA_HOME} && cd /root/OPS/scripts && ./stop.sh"
+
+        echo -e "-> [${YELLOW}STOP OPS${END}]"
+
+        #$CMD1
+        ssh_function $MASTER $PORT "$CMD1" $PASSWD
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD2" ::: $PASSWD
+
+        echo -e "<- [${RED}STOP OPS${END}]"
+}
 function start_yarn() {
-	CMD1="${HADOOP_DIR}/sbin/yarn-daemon.sh start resourcemanager"
+	CMD1="export JAVA_HOME=${JAVA_HOME} && ${HADOOP_DIR}/sbin/yarn-daemon.sh start resourcemanager"
 	CMD2="export JAVA_HOME=${JAVA_HOME} && ${HADOOP_DIR}/sbin/yarn-daemon.sh start nodemanager"
 
 	echo -e "-> [${YELLOW}START YARN${END}]"
 
-	$CMD1
+	#$CMD1
+	ssh_function $MASTER $PORT "$CMD1" $PASSWD
 	export -f ssh_function expect_function
 	parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD2" ::: $PASSWD
 
 	echo -e "<- [${RED}START YARN${END}]"
 }
 function stop_yarn() {
-        CMD1="${HADOOP_DIR}/sbin/yarn-daemon.sh stop resourcemanager"
+        CMD1="export JAVA_HOME=${JAVA_HOME} && ${HADOOP_DIR}/sbin/yarn-daemon.sh stop resourcemanager"
         CMD2="export JAVA_HOME=${JAVA_HOME} && ${HADOOP_DIR}/sbin/yarn-daemon.sh stop nodemanager"
 
         echo -e "-> [${YELLOW}STOP YARN${END}]"
 
-        $CMD1
+        #$CMD1
+	ssh_function $MASTER $PORT "$CMD1" $PASSWD
         export -f ssh_function expect_function
         parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD2" ::: $PASSWD
 
 	echo -e "<- [${RED}STOP YARN${END}]"
 }
 function start_hdfs() {
-        CMD1="${HADOOP_DIR}/sbin/hadoop-daemon.sh start namenode"
+        CMD1="export JAVA_HOME=${JAVA_HOME} && ${HADOOP_DIR}/sbin/hadoop-daemon.sh start namenode"
         CMD2="export JAVA_HOME=${JAVA_HOME} && ${HADOOP_DIR}/sbin/hadoop-daemon.sh start datanode"
 
         echo -e "-> [${YELLOW}START HDFS${END}]"
 
-        $CMD1
+        #$CMD1
+	ssh_function $MASTER $PORT "$CMD1" $PASSWD
         export -f ssh_function expect_function
         parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD2" ::: $PASSWD
 
         echo -e "<- [${RED}START HDFS${END}]"
 }
 function stop_hdfs() {
-        CMD1="${HADOOP_DIR}/sbin/hadoop-daemon.sh stop namenode"
+        CMD1="export JAVA_HOME=${JAVA_HOME} && ${HADOOP_DIR}/sbin/hadoop-daemon.sh stop namenode"
         CMD2="export JAVA_HOME=${JAVA_HOME} && ${HADOOP_DIR}/sbin/hadoop-daemon.sh stop datanode"
 
         echo -e "-> [${YELLOW}STOP HDFS${END}]"
 
-        $CMD1
+        #$CMD1
+	ssh_function $MASTER $PORT "$CMD1" $PASSWD
         export -f ssh_function expect_function
         parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD2" ::: $PASSWD
 
         echo -e "<- [${RED}STOP HDFS${END}]"
 }
 function format_hdfs() {
-        CMD1="${HADOOP_DIR}/bin/hadoop namenode -format"
+        CMD1="export JAVA_HOME=${JAVA_HOME}; ${HADOOP_DIR}/bin/hadoop namenode -format"
 
         echo -e "-> [${YELLOW}FORMAT HDFS${END}]"
 
-        $CMD1
+        ssh_function $MASTER $PORT "$CMD1" $PASSWD
 
         echo -e "<- [${RED}FORMAT HDFS${END}]"
 }
