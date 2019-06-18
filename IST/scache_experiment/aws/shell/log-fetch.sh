@@ -23,7 +23,7 @@ for WORKER_DIR in `ls $EXPOSE_DIR | grep worker`; do
                 if [ -d $EXPOSE_DIR/$WORKER_DIR/$JOB_ID/$LOG_DIR ]; then
                         LOG_FILE=$EXPOSE_DIR/$WORKER_DIR/$JOB_ID/$LOG_DIR/stdout
 
-                        TEST=`cat $LOG_FILE |grep shuffle-start`
+                        TEST=`cat $LOG_FILE |grep reduceTask`
                         if [ $TEST ]; then
                                 #Fetch
 				for LOG in `cat $LOG_FILE |grep fetch_file`; do

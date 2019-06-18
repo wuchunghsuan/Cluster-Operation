@@ -24,36 +24,15 @@ for WORKER_DIR in `ls $EXPOSE_DIR | grep worker`; do
                 if [ -d $EXPOSE_DIR/$WORKER_DIR/$JOB_ID/$LOG_DIR ]; then
                         LOG_FILE=$EXPOSE_DIR/$WORKER_DIR/$JOB_ID/$LOG_DIR/stdout
 
-                        TEST=`cat $LOG_FILE |grep shuffle-start`
+                        TEST=`cat $LOG_FILE |grep reduceTask`
                         if [ $TEST ]; then
-                                shuffle_start=`cat $LOG_FILE |grep shuffle-start`
-                                shuffle_stop=`cat $LOG_FILE |grep shuffle-stop`
-                                reduce_start=`cat $LOG_FILE |grep reduce-start`
-                                reduce_stop=`cat $LOG_FILE |grep reduce-stop`
-                                echo ${shuffle_start} >> $OUTPUT_TIME_FILE
-                                echo ${shuffle_stop} >> $OUTPUT_TIME_FILE
-                                echo ${reduce_start} >> $OUTPUT_TIME_FILE
-                                echo ${reduce_stop} >> $OUTPUT_TIME_FILE
-                                task=`cat $LOG_FILE |grep task`
-                        	#Shuffle
-                                TIME=`expr \`echo ${shuffle_stop} | awk -F - '{print $2}'\` - \`echo ${shuffle_start} | awk -F - '{print $2}'\``
-                                NAME_SIZE=`echo $task |awk -F - '{print $2"\t"$3}'`
-                                echo "Shuffle	${NAME_SIZE}   ${TIME}" >> $OUTPUT_FILE
-                                #Reduce
-                                TIME=`expr \`echo ${reduce_stop} |awk -F - '{print $2}'\` - \`echo ${reduce_start} |awk -F - '{print $2}'\``
-                                NAME=`echo ${reduce_stop} |awk -F - '{print $3}'`
-                                echo "Reduce    ${NAME}   ${TIME}" >> $OUTPUT_FILE
+                                log=`cat $LOG_FILE |grep reduceTask`
+                                echo ${log} >> $OUTPUT_FILE
                         fi
-                        TEST=`cat $LOG_FILE |grep map-start`
+                        TEST=`cat $LOG_FILE |grep mapTask`
                         if [ $TEST ]; then
-                                map_start=`cat $LOG_FILE |grep map-start`
-                                map_stop=`cat $LOG_FILE |grep map-stop`
-                                echo ${map_start} >> $OUTPUT_TIME_FILE
-                                echo ${map_stop} >> $OUTPUT_TIME_FILE
-                                #Map
-                                TIME=`expr \`echo ${map_stop} | awk -F - '{print $2}'\` - \`echo ${map_start} | awk -F - '{print $2}'\``
-                                NAME=`echo ${map_stop} | awk -F - '{print $3}'`
-                                echo "Map       ${NAME}   ${TIME}" >> $OUTPUT_FILE
+                                log=`cat $LOG_FILE |grep mapTask`
+                                echo ${log} >> $OUTPUT_FILE
                         fi
 
                 fi
