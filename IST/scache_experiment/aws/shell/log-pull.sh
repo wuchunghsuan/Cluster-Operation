@@ -9,7 +9,7 @@ END="\033[0m"
 
 JOB_ID=$1
 #WORKERS=(192.168.2.16 192.168.2.12)
-EXPOSE_DIR=/log/nodemanager/log/*
+EXPOSE_DIR=/log/nodemanager/log/
 OUTPUT_DIR=/root/log-scale-test
 OPS_LOG=/root/ops.log
 

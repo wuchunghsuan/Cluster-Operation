@@ -135,12 +135,27 @@ conf_slaves_mapred_site() {
 	FILE=mapred-site.xml
 	KEY=mapreduce.shuffle.port
 	VALUE="13562"
-	conf_hadoop_slaves $FILE $KEY $VALUE
+	#conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=mapred-site.xml
 	KEY=mapreduce.cluster.local.dir
-	VALUE="\\\/ebs\\\/dir\\\/hadoop\\\/tmp\\\/mapred\\\/local"
-	conf_hadoop_slaves $FILE $KEY $VALUE
+	VALUE="\\\/dir\\\/hadoop\\\/tmp\\\/mapred\\\/local"
+	#conf_hadoop_slaves $FILE $KEY $VALUE
+
+	FILE=mapred-site.xml
+        KEY=mapreduce.task.io.sort.mb
+        VALUE="200"
+        conf_hadoop_slaves $FILE $KEY $VALUE
+
+	FILE=mapred-site.xml
+        KEY=mapreduce.child.java.opts
+        VALUE="-Xmx200m"
+        conf_hadoop_slaves $FILE $KEY $VALUE
+
+	FILE=mapred-site.xml
+        KEY=mapreduce.reduce.java.opts
+        VALUE="-Xmx200m"
+        conf_hadoop_slaves $FILE $KEY $VALUE
 }
 ### core-site.xml
 conf_slaves_core_site() {
@@ -163,7 +178,7 @@ function init() {
 	#conf_master_hdfs_site
 	conf_slaves_yarn_site
 	conf_slaves_hdfs_site
-	#conf_slaves_mapred_site
+	conf_slaves_mapred_site
 	conf_slaves_core_site
 	#
 	#start_yarn
@@ -172,14 +187,15 @@ function init() {
 }
 
 #init
+#conf_slaves_mapred_site
 #conf_slaves_hdfs_site
-scp_hosts
+#scp_hosts
 
 #install_java
 
 #scp_origin_jar
-#stop_yarn
-#start_yarn
+stop_yarn
+start_yarn
 #stop_yarn
 #stop_hdfs
 #format_hdfs

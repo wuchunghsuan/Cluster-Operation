@@ -106,6 +106,17 @@ function conf_hadoop_function() {
 }
 
 ### APP FUNCTIONS ###
+function scp_conf() {
+        FROM=../conf/*
+        TO=/root/hadoop-2.8.5/etc/hadoop/
+
+        echo -e "-> [${YELLOW}SCP CONF${END}]"
+
+        export -f scp_function expect_function
+        parallel scp_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
+
+        echo -e "<- [${RED}SCP CONF${END}]"
+}
 function scp_hadoop() {
 	FROM=../tar/hadoop-2.8.5.tar
 	TO=/root/
