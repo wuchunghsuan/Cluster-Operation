@@ -5,6 +5,8 @@ YELLOW="\033[33m"
 BLUE="\033[34m"
 END="\033[0m"
 
+. ./ip.sh
+
 function prepare_sort() {
 	SIZE=${1}000000
 	MAP=$2
@@ -18,7 +20,7 @@ randomtextwriter \
 -D mapreduce.randomtextwriter.bytespermap=$((${SIZE}/${MAP})) \
 -D mapreduce.job.maps=${MAP} \
 -D mapreduce.job.reduces=${REDUCE} \
-hdfs://172.31.16.183:9000/HiBench/Sort/Input-${NAME}G"
+hdfs://${MASTER}:9000/HiBench/Sort/Input-${NAME}G"
 	echo -e "${BLUE}Docker exec hadoop-master:${END}"
 	echo -e "${GREEN}$COMMAND${END}"
 	#docker exec hadoop-master $COMMAND
@@ -38,8 +40,8 @@ sort \
 -outKey org.apache.hadoop.io.Text \
 -outValue org.apache.hadoop.io.Text \
 -r ${REDUCE} \
-hdfs://172.31.16.183:9000/HiBench/Sort/Input-${NAME}G \
-hdfs://172.31.16.183:9000/HiBench/Sort/Output-${NAME}G"
+hdfs://${MASTER}:9000/HiBench/Sort/Input-${NAME}G \
+hdfs://${MASTER}:9000/HiBench/Sort/Output-${NAME}G"
 	echo -e "${BLUE}Docker exec hadoop-master:${END}"
 	echo -e "${GREEN}$RM_COMMAND${END}"
 	$RM_COMMAND
@@ -53,20 +55,4 @@ sleep 10
 run_sort 102400 512 128
 sleep 10
 run_sort 102400 512 128
-
-#prepare_sort 25600 256 64
-#sleep 30
-#run_sort 25600 256 64
-#sleep 30
-#run_sort 25600 256 64
-
-#prepare_sort 38400 384 96
-#sleep 30
-#run_sort 38400 384 96
-#sleep 30
-#run_sort 38400 384 96
-
-
-
-
 
