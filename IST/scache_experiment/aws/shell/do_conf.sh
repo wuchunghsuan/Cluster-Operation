@@ -105,8 +105,13 @@ conf_slaves_yarn_site() {
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.resource.memory-mb
-	VALUE="8192"
+	VALUE="16384"
 	conf_hadoop_slaves $FILE $KEY $VALUE
+
+	FILE=yarn-site.xml
+        KEY=yarn.scheduler.maximum-allocation-mb
+        VALUE="16384"
+        conf_hadoop_slaves $FILE $KEY $VALUE
 	
 	FILE=yarn-site.xml
 	KEY=yarn.nodemanager.local-dirs
@@ -168,6 +173,8 @@ conf_slaves_core_site() {
 function init() {
 	scp_hadoop
 	tar_hadoop
+	scp_spark
+        tar_spark
 	
 	#mount_disk
 	#
@@ -186,20 +193,20 @@ function init() {
 	#start_hdfs
 }
 
-#init
-#conf_slaves_mapred_site
-#conf_slaves_hdfs_site
-#scp_hosts
-
-#install_java
-
+init
+scp_hosts
+#
+install_java
+#install_docker
+#
 #scp_origin_jar
+#scp_conf
 stop_yarn
 start_yarn
 #stop_yarn
 #stop_hdfs
-#format_hdfs
-#start_hdfs
+format_hdfs
+start_hdfs
 
 
 

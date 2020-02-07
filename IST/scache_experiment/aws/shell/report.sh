@@ -9,11 +9,10 @@ function run() {
 }
 
 IDS=(
-application_1559633219982_0010
-application_1559633219982_0011
+application_1559641550938_0003
+application_1559641550938_0004
 )
 
 for ID in ${IDS[@]}; do
 	run $ID
 done
-./log-ops.sh

@@ -4,8 +4,13 @@ GREEN="\033[32m"
 YELLOW="\033[33m"
 BLUE="\033[34m"
 END="\033[0m"
-
-IPS=( 172.31.6.164 172.31.3.213 172.31.8.142 172.31.15.124)
+IPS=(
+ip-172-31-0-46.cn-northwest-1.compute.internal
+ip-172-31-14-247.cn-northwest-1.compute.internal
+ip-172-31-2-161.cn-northwest-1.compute.internal
+)
+IPSS=(
+)
 PORT=22
 #for ((i=1;i<5;i++)); do
 #        #if [ $i -lt 10 ]; then num=0$i; else num=$i; fi

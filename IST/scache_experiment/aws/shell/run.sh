@@ -15,7 +15,7 @@ function prepare_sort() {
 	COMMAND="/root/hadoop-2.8.5/bin/hadoop \
 --config /root/hadoop-2.8.5/etc/hadoop \
 jar /root/hadoop-2.8.5/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.8.5.jar \
-randomtextwriter \
+teragen \
 -D mapreduce.randomtextwriter.totalbytes=${SIZE} \
 -D mapreduce.randomtextwriter.bytespermap=$((${SIZE}/${MAP})) \
 -D mapreduce.job.maps=${MAP} \
@@ -27,6 +27,25 @@ hdfs://${MASTER}:9000/HiBench/Sort/Input-${NAME}G"
 	$COMMAND
 }
 
+function prepare_terasort() {
+        SIZE=${1}000000
+        MAP=$2
+        REDUCE=$3
+        NAME=$(($SIZE/1000000000))
+        COMMAND="/root/hadoop-2.8.5/bin/hadoop \
+--config /root/hadoop-2.8.5/etc/hadoop \
+jar /root/hadoop-2.8.5/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.8.5.jar \
+teragen \
+-D mapreduce.job.maps=${MAP} \
+-D mapreduce.job.reduces=${REDUCE} \
+${SIZE} \
+hdfs://${MASTER}:9000/HiBench/Sort/Input-${NAME}G"
+        echo -e "${BLUE}Docker exec hadoop-master:${END}"
+        echo -e "${GREEN}$COMMAND${END}"
+        #docker exec hadoop-master $COMMAND
+        $COMMAND
+}
+
 function run_sort() {
         SIZE=${1}000000
         MAP=$2
@@ -36,7 +55,7 @@ function run_sort() {
 	COMMAND="/root/hadoop-2.8.5/bin/hadoop \
 --config /root/hadoop-2.8.5/etc/hadoop \
 jar /root/hadoop-2.8.5/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.8.5.jar \
-sort \
+tersort \
 -outKey org.apache.hadoop.io.Text \
 -outValue org.apache.hadoop.io.Text \
 -r ${REDUCE} \
@@ -48,11 +67,15 @@ hdfs://${MASTER}:9000/HiBench/Sort/Output-${NAME}G"
         echo -e "${GREEN}$COMMAND${END}"
         $COMMAND
 }
-#prepare_sort 5000 32 32
+#prepare_sort 51200 512 128
+#sleep 10
+#run_sort 51200 512 128
+#sleep 10
+#run_sort 51200 512 128
 
-prepare_sort 102400 512 128 
-sleep 10
-run_sort 102400 512 128
-sleep 10
-run_sort 102400 512 128
+prepare_terasort 256000 512 128
+#sleep 10
+#run_sort 256000 512 128
+#sleep 10
+#run_sort 256000 512 128
 

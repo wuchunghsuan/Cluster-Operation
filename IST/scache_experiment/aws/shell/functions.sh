@@ -59,6 +59,16 @@ function ssh_function() {
 	
 	expect_function "$CMD" $PASSWD
 }
+function ssh_avoid_checking() {
+        IP=$1
+        PORT=$2
+        RUN=$3
+        PASSWD=$4
+        #echo -e " SSH IP:${GREEN}$IP${END} PORT:${GREEN}$PORT${END} CMD:${BLUE}$RUN${END}"
+        CMD="ssh -o "StrictHostKeyChecking no" -p $PORT $IP \"${RUN}\""
+
+        expect_function "$CMD" $PASSWD
+}
 function ssh_pem_function() {
 	IP=$1
         PORT=$2
@@ -128,9 +138,31 @@ function scp_hadoop() {
 
 	echo -e "<- [${RED}SCP HADOOP${END}]"
 }
+function scp_spark() {
+        FROM=../tar/spark-2.4.3.tar
+        TO=/root/
+
+        echo -e "-> [${YELLOW}SCP SPARK${END}]"
+
+        export -f scp_function expect_function
+        parallel scp_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
+
+        echo -e "<- [${RED}SCP SPARK${END}]"
+}
 function scp_ops() {
         FROM=../tar/ops.tar
         TO=/root/
+
+        echo -e "-> [${YELLOW}SCP OPS${END}]"
+
+        export -f scp_function expect_function
+        parallel scp_function ::: ${IPS[@]} ::: $PORT  ::: $FROM ::: $TO ::: $PASSWD
+
+        echo -e "<- [${RED}SCP OPS${END}]"
+}
+function scp_ops_fat() {
+        FROM=/root/ops.jar
+        TO=/root/OPS/target/
 
         echo -e "-> [${YELLOW}SCP OPS${END}]"
 
@@ -229,6 +261,16 @@ function tar_hadoop() {
 
 	echo -e "<- [${RED}TAR HADOOP${END}]"
 }
+function tar_spark() {
+        CMD="tar -xf /root/spark-2.4.3.tar && rm spark-2.4.3.tar"
+
+        echo -e "-> [${YELLOW}TAR SPARK${END}]"
+
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
+
+        echo -e "<- [${RED}TAR SPARK${END}]"
+}
 function mount_disk() {
 	CMD="mkfs -t ext4 /dev/xvdba && mkdir /ebs ; mount /dev/xvdba /ebs"
 
@@ -300,6 +342,16 @@ function install_java() {
         parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
 
 	echo -e "<- [${RED}INSTALL JAVA${END}]"
+}
+function install_docker() {
+        CMD="yum update -y && yum install -y docker && systemctl restart docker"
+
+        echo -e "-> [${YELLOW}INSTALL DOCKER${END}]"
+
+        export -f ssh_function expect_function
+        parallel ssh_function ::: "${IPS[@]}" ::: $PORT ::: "$CMD" ::: $PASSWD
+
+        echo -e "<- [${RED}INSTALL DOCKER${END}]"
 }
 function clean_hdfs() {
         CMD1="rm -rf /dir/hadoop/datanode/current/"
